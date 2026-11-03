@@ -12,14 +12,14 @@ describe('generateSecret', () => {
   });
 
   it('длина не может превышать размер базы', () => {
-    expect(() => generateSecret(3, 2)).toThrow('Длина на может первышать размер базы');
+    expect(() => generateSecret(3, 2)).toThrow('Длина не может превышать размер базы');
   });
 
   it('используются только допустимые значения', () => {
-    expect(generateSecret(2, 2)).toMatch(/^[0,1]/);
-    expect(generateSecret(6, 16)).toMatch(/^[0-9a-f]/);
-    expect(generateSecret(6, 8)).toMatch(/^[0-7]/);
-    expect(generateSecret(6, 10)).toMatch(/^[0-9]/);
+    expect(generateSecret(2, 2)).toMatch(/^[01]{2}$/);
+    expect(generateSecret(6, 16)).toMatch(/^[0-9a-f]{6}$/);
+    expect(generateSecret(6, 8)).toMatch(/^[0-7]{6}$/);
+    expect(generateSecret(6, 10)).toMatch(/^[0-9]{6}$/);
   });
 
   it('используется переданный источник случайности', () => {
