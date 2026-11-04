@@ -1,3 +1,5 @@
+import { createDictionary } from '../utils/createDictionary';
+
 export function generateSecret(
   length: number,
   base: number,
@@ -5,7 +7,7 @@ export function generateSecret(
 ): string {
   if (length > base) throw new Error('Длина не может превышать размер базы');
 
-  const dictionary = Array.from({ length: base }).map((_, i) => i.toString(base));
+  const dictionary = createDictionary(base);
 
   const secret = Array.from({ length }).map(() => {
     const index = Math.floor(random() * dictionary.length);
