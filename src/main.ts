@@ -1,6 +1,7 @@
 import './style.css';
 import { settingsView } from './ui/settingsView';
 import { gameView } from './ui/gameView';
+import { generateSecret } from './game/generateSecret';
 
 const root = document.createElement('div');
 root.className = 'root';
@@ -10,7 +11,10 @@ title.textContent = 'Bulls and Cows';
 
 root.append(
   title,
-  settingsView((config) => root.replaceChildren(gameView(config))),
+  settingsView((config) => {
+    const secret = generateSecret(config.length, config.base);
+    root.replaceChildren(gameView(config, secret));
+  }),
 );
 
 document.body.append(root);
