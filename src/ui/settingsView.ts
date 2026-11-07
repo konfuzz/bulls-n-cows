@@ -1,6 +1,7 @@
 import SETTINGS from '../settings';
+import type { GameConfig } from '../types';
 
-export function settingsView(): HTMLElement {
+export function settingsView(onStart: (config: GameConfig) => void): HTMLElement {
   const container = document.createElement('div');
   container.className = 'settings';
 
@@ -32,6 +33,10 @@ export function settingsView(): HTMLElement {
 
   const startButton = document.createElement('button');
   startButton.textContent = 'Start Game';
+
+  startButton.addEventListener('click', () => {
+    onStart({ length: Number(lengthSelect.value), base: Number(baseSelect.value) });
+  });
 
   container.append(title, baseSelect, lengthSelect, startButton);
 
