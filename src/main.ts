@@ -9,12 +9,16 @@ root.className = 'root';
 const title = document.createElement('h1');
 title.textContent = 'Bulls and Cows';
 
-root.append(
-  title,
-  settingsView((config) => {
-    const secret = generateSecret(config.length, config.base);
-    root.replaceChildren(gameView(config, secret));
-  }),
-);
+const renderMainScreen = () => {
+  root.replaceChildren(
+    title,
+    settingsView((config) => {
+      const secret = generateSecret(config.length, config.base);
+      root.replaceChildren(title, gameView(config, secret, renderMainScreen));
+    }),
+  );
+};
+
+renderMainScreen();
 
 document.body.append(root);
