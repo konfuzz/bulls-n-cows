@@ -2,6 +2,7 @@ import './style.css';
 import SETTINGS from './settings.ts';
 import { settingsView } from './ui/settingsView';
 import { gameView } from './ui/gameView';
+import { leaderBoardView } from './ui/leaderBoardView.ts';
 import { generateSecret } from './game/generateSecret';
 import { loadRecords, saveRecords } from './storage/recordsStorage.ts';
 import { addRecord } from './game/addRecord.ts';
@@ -25,10 +26,18 @@ const updateRecords = (record: GameRecord) => {
   saveRecords(records);
 };
 
+const showLeaderBoard = () => {
+  const records = loadRecords();
+  root.replaceChildren(title, leaderBoardView(records, showSettings));
+};
+
 const startGame = (config: GameConfig) => {
   currentConfig = config;
   const secret = generateSecret(config.length, config.base);
-  root.replaceChildren(title, gameView(config, secret, showSettings, updateRecords));
+  root.replaceChildren(
+    title,
+    gameView(config, secret, showSettings, updateRecords, showLeaderBoard),
+  );
 };
 
 showSettings();

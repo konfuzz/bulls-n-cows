@@ -9,6 +9,7 @@ export function gameView(
   secret: string,
   onRestart: () => void,
   onWin: (record: GameRecord) => void,
+  onLeaderboard: () => void,
 ): HTMLElement {
   let history: Attempt[] = [];
   const startedAt = Date.now();
@@ -78,6 +79,7 @@ export function gameView(
 
     const leaderBoardButton = document.createElement('button');
     leaderBoardButton.textContent = 'Leaderboard';
+    leaderBoardButton.addEventListener('click', onLeaderboard);
 
     banner.append(title, newGameButton, leaderBoardButton);
     formWrapper.replaceChildren(banner);
