@@ -10,6 +10,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
     "prepare": "husky",
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest"
