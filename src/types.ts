@@ -3,4 +3,10 @@ export interface GameConfig {
   base: number;
 }
 
+export interface GameRecord {
+  config: GameConfig;
+  attempts: number;
+  time: number;
+}
+
 export type Attempt = { guess: string; bulls: number; cows: number };
