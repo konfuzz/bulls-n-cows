@@ -1,4 +1,4 @@
-import type { GameConfig, Attempt } from '../types';
+import type { GameConfig, Attempt, GameRecord } from '../types';
 import SETTINGS from '../settings';
 import { isValidGuess } from '../game/isValidGuess';
 import { createDigitValidator } from '../game/createDigitValidator';
@@ -8,6 +8,7 @@ export function gameView(
   { length, base }: GameConfig,
   secret: string,
   onRestart: () => void,
+  onWin: (record: GameRecord) => void,
 ): HTMLElement {
   let history: Attempt[] = [];
   const startedAt = Date.now();
@@ -80,6 +81,7 @@ export function gameView(
 
     banner.append(title, newGameButton, leaderBoardButton);
     formWrapper.replaceChildren(banner);
+    onWin({ config: { length, base }, attempts: history.length, time: timeSeconds });
   };
 
   form.addEventListener('submit', (e) => {

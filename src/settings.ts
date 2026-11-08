@@ -25,6 +25,7 @@ const settings = {
   maxLength: 6,
   defaultConfig,
   storageKey: 'bulls-n-cows-records',
+  recordsLimit: 5,
 };
 
 export default settings;
