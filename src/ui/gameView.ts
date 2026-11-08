@@ -10,6 +10,7 @@ export function gameView(
   onRestart: () => void,
 ): HTMLElement {
   let history: Attempt[] = [];
+  const startedAt = Date.now();
 
   const isValidChar = createDigitValidator(base);
   const container = document.createElement('div');
@@ -65,8 +66,14 @@ export function gameView(
   const finishGame = () => {
     const banner = document.createElement('div');
 
+    const timeSeconds = (Date.now() - startedAt) / 1000;
+    const time =
+      timeSeconds < 60
+        ? `${timeSeconds.toFixed(1)} seconds`
+        : `${(timeSeconds / 60).toFixed(1)} minutes`;
+
     const title = document.createElement('h3');
-    title.textContent = `You won in ${history.length} tries!`;
+    title.textContent = `You won in ${history.length} tries, ${time}!`;
 
     const leaderBoardButton = document.createElement('button');
     leaderBoardButton.textContent = 'Leaderboard';
