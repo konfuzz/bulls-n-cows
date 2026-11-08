@@ -1,3 +1,7 @@
+import type { GameConfig } from './types';
+
+const defaultConfig: GameConfig = { length: 4, base: 10 };
+
 const settings = {
   base: [
     {
@@ -19,6 +23,7 @@ const settings = {
   ],
   minLength: 2,
   maxLength: 6,
+  defaultConfig,
 };
 
 export default settings;

@@ -1,7 +1,10 @@
 import SETTINGS from '../settings';
 import type { GameConfig } from '../types';
 
-export function settingsView(onStart: (config: GameConfig) => void): HTMLElement {
+export function settingsView(
+  { length, base }: GameConfig,
+  onStart: (config: GameConfig) => void,
+): HTMLElement {
   const container = document.createElement('div');
   container.className = 'settings';
 
@@ -29,7 +32,9 @@ export function settingsView(onStart: (config: GameConfig) => void): HTMLElement
   };
 
   baseSelect.addEventListener('change', updateLengthOptions);
+  baseSelect.value = String(base);
   updateLengthOptions();
+  lengthSelect.value = String(length);
 
   const startButton = document.createElement('button');
   startButton.textContent = 'Start Game';
