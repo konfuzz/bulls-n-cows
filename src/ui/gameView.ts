@@ -1,15 +1,21 @@
-import type { GameConfig, Attempt, GameRecord } from '../types';
+import type { Attempt, GameConfig, GameRecord } from '../types';
 import SETTINGS from '../settings';
 import { isValidGuess } from '../game/isValidGuess';
 import { createDigitValidator } from '../game/createDigitValidator';
 import { evaluateGuess } from '../game/evaluateGuess';
+import { addAttempt, hasAttempt } from '../game/attempts';
+import { formatDuration } from '../utils/formatDuration';
+
+interface GameViewHandlers {
+  onRestart: () => void;
+  onWin: (record: GameRecord) => void;
+  onLeaderboard: () => void;
+}
 
 export function gameView(
   { length, base }: GameConfig,
   secret: string,
-  onRestart: () => void,
-  onWin: (record: GameRecord) => void,
-  onLeaderboard: () => void,
+  { onRestart, onWin, onLeaderboard }: GameViewHandlers,
 ): HTMLElement {
   let history: Attempt[] = [];
   const startedAt = Date.now();
@@ -48,10 +54,6 @@ export function gameView(
   const historyElement = document.createElement('div');
   const error = document.createElement('p');
 
-  const addAttempt = (history: Attempt[], attempt: Attempt): Attempt[] => {
-    return [...history, attempt];
-  };
-
   const renderHistoryRow = ({ guess, bulls, cows }: Attempt) => {
     const historyRow = document.createElement('div');
 
@@ -67,21 +69,16 @@ export function gameView(
 
   const finishGame = () => {
     const banner = document.createElement('div');
-
     const timeSeconds = (Date.now() - startedAt) / 1000;
-    const time =
-      timeSeconds < 60
-        ? `${timeSeconds.toFixed(1)} seconds`
-        : `${(timeSeconds / 60).toFixed(1)} minutes`;
 
-    const title = document.createElement('h3');
-    title.textContent = `You won in ${history.length} tries, ${time}!`;
+    const winTitle = document.createElement('h3');
+    winTitle.textContent = `You won in ${history.length} tries, ${formatDuration(timeSeconds)}!`;
 
     const leaderBoardButton = document.createElement('button');
     leaderBoardButton.textContent = 'Leaderboard';
     leaderBoardButton.addEventListener('click', onLeaderboard);
 
-    banner.append(title, newGameButton, leaderBoardButton);
+    banner.append(winTitle, newGameButton, leaderBoardButton);
     formWrapper.replaceChildren(banner);
     onWin({ config: { length, base }, attempts: history.length, time: timeSeconds });
   };
@@ -89,24 +86,25 @@ export function gameView(
   form.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    if (!isValidGuess(input.value, length, base)) {
-      error.textContent = 'Error';
+    const guess = input.value;
+
+    if (!isValidGuess(guess, length, base)) {
+      error.textContent = 'Некорректный ввод';
       return;
     }
 
-    if (history.some((a) => a.guess.toLowerCase() === input.value.toLowerCase())) {
+    if (hasAttempt(history, guess)) {
       error.textContent = 'Эта попытка уже была';
       return;
     }
 
     error.textContent = '';
 
-    const { bulls, cows } = evaluateGuess(secret, input.value);
-    history = addAttempt(history, { guess: input.value, bulls, cows });
+    const { bulls, cows } = evaluateGuess(secret, guess);
+    history = addAttempt(history, { guess, bulls, cows });
     const historyRows = history.toReversed().map((h) => renderHistoryRow(h));
 
     form.reset();
-
     historyElement.replaceChildren(...historyRows);
 
     if (length === bulls) finishGame();

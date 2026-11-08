@@ -1,6 +1,7 @@
 import type { GameRecord } from '../types';
+import { formatDuration } from '../utils/formatDuration';
 
-export function leaderBoardView(records: GameRecord[], onRestart: () => void): HTMLElement {
+export function leaderBoardView(records: GameRecord[], onNewGame: () => void): HTMLElement {
   const container = document.createElement('div');
 
   const title = document.createElement('h2');
@@ -8,7 +9,7 @@ export function leaderBoardView(records: GameRecord[], onRestart: () => void): H
 
   const newGameButton = document.createElement('button');
   newGameButton.textContent = 'New Game';
-  newGameButton.addEventListener('click', onRestart);
+  newGameButton.addEventListener('click', onNewGame);
 
   const table = document.createElement('div');
 
@@ -33,7 +34,7 @@ export function leaderBoardView(records: GameRecord[], onRestart: () => void): H
     createTableRow(
       `${rec.config.length}/${rec.config.base}`,
       `${rec.attempts} attempts`,
-      `${rec.time} seconds`,
+      formatDuration(rec.time),
     ),
   );
 

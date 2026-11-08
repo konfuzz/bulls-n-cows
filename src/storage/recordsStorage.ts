@@ -1,7 +1,6 @@
-import SETTINGS from '../settings';
 import type { GameRecord } from '../types';
 
-const STORAGE_KEY = SETTINGS.storageKey;
+export const STORAGE_KEY = 'bulls-n-cows-records';
 
 export function loadRecords(): GameRecord[] {
   try {

@@ -1,12 +1,12 @@
 import './style.css';
-import SETTINGS from './settings.ts';
+import SETTINGS from './settings';
 import { settingsView } from './ui/settingsView';
 import { gameView } from './ui/gameView';
-import { leaderBoardView } from './ui/leaderBoardView.ts';
+import { leaderBoardView } from './ui/leaderBoardView';
 import { generateSecret } from './game/generateSecret';
-import { loadRecords, saveRecords } from './storage/recordsStorage.ts';
-import { addRecord } from './game/addRecord.ts';
-import type { GameConfig, GameRecord } from './types.ts';
+import { loadRecords, saveRecords } from './storage/recordsStorage';
+import { addRecord } from './game/addRecord';
+import type { GameConfig, GameRecord } from './types';
 
 const root = document.createElement('div');
 root.className = 'root';
@@ -21,14 +21,12 @@ const showSettings = () => {
 };
 
 const updateRecords = (record: GameRecord) => {
-  const recordsStorage = loadRecords();
-  const records = addRecord(recordsStorage, record, SETTINGS.recordsLimit);
+  const records = addRecord(loadRecords(), record, SETTINGS.recordsLimit);
   saveRecords(records);
 };
 
 const showLeaderBoard = () => {
-  const records = loadRecords();
-  root.replaceChildren(title, leaderBoardView(records, showSettings));
+  root.replaceChildren(title, leaderBoardView(loadRecords(), showSettings));
 };
 
 const startGame = (config: GameConfig) => {
@@ -36,7 +34,11 @@ const startGame = (config: GameConfig) => {
   const secret = generateSecret(config.length, config.base);
   root.replaceChildren(
     title,
-    gameView(config, secret, showSettings, updateRecords, showLeaderBoard),
+    gameView(config, secret, {
+      onRestart: showSettings,
+      onWin: updateRecords,
+      onLeaderboard: showLeaderBoard,
+    }),
   );
 };
 

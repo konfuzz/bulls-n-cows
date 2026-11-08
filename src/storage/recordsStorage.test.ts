@@ -1,4 +1,4 @@
-import { loadRecords, saveRecords } from './recordsStorage';
+import { loadRecords, saveRecords, STORAGE_KEY } from './recordsStorage';
 import { afterEach, it, expect, vi, describe } from 'vitest';
 
 function fakeStorage() {
@@ -20,7 +20,7 @@ describe('loadRecords and saveRecords', () => {
 
   it('возвращает [] на мусор в хранилище', () => {
     const s = fakeStorage();
-    s.setItem('bulls-and-cows/records', 'это не json');
+    s.setItem(STORAGE_KEY, 'это не json');
     vi.stubGlobal('localStorage', s);
     expect(loadRecords()).toEqual([]);
   });
