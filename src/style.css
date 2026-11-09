@@ -1,0 +1,252 @@
+:root {
+  --bg: #1a1c1e;
+  --panel: #212427;
+  --panel-2: #26292d;
+  --border: #34383d;
+  --fg: #d6d9dd;
+  --muted: #8a9099;
+  --accent: #8fb8a8;
+  --accent-weak: rgba(143, 184, 168, 0.12);
+  --danger: #cf8f8f;
+  --radius: 10px;
+  --mono: ui-monospace, SFMono-Regular, 'JetBrains Mono', Menlo, Consolas, monospace;
+
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 48px 20px;
+  color: var(--fg);
+  font-family: var(--mono);
+  font-size: 17px;
+  line-height: 1.6;
+  background: var(--bg);
+}
+
+p {
+  margin: 0;
+}
+
+.root {
+  width: 100%;
+  max-width: 600px;
+}
+
+h1 {
+  margin: 0 0 28px;
+  text-align: center;
+  font-size: 22px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg);
+}
+
+.settings,
+.game,
+.leaderboard {
+  display: grid;
+  gap: 16px;
+  padding: 26px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--panel);
+}
+
+.screen-title {
+  margin: 0;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.screen-title::before {
+  content: '> ';
+  color: var(--accent);
+}
+
+select,
+.guess-input {
+  font: inherit;
+  color: var(--fg);
+  background-color: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  transition: border-color 0.15s;
+}
+
+select {
+  width: 100%;
+  cursor: pointer;
+  appearance: none;
+  padding-right: 42px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a9099' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+}
+
+select:focus,
+.guess-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.guess-input::placeholder {
+  color: var(--muted);
+}
+
+.guess-form {
+  display: flex;
+  gap: 12px;
+}
+
+.guess-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.button {
+  font: inherit;
+  color: var(--fg);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 18px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    color 0.15s,
+    border-color 0.15s,
+    background 0.15s;
+}
+
+.button:focus {
+  outline: none;
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-weak);
+}
+
+.button:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-weak);
+}
+
+.button:active {
+  transform: translateY(1px);
+}
+
+.button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.settings-hint {
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.settings-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.empty-state {
+  padding: 12px 14px;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  text-align: center;
+  color: var(--muted);
+}
+
+.error {
+  min-height: 1.4em;
+  color: var(--danger);
+  font-size: 15px;
+}
+
+.history {
+  display: grid;
+  gap: 10px;
+}
+
+.history-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--panel-2);
+}
+
+.history-guess {
+  letter-spacing: 0.16em;
+  color: var(--accent);
+}
+
+.history-result {
+  color: var(--muted);
+}
+
+.banner {
+  display: grid;
+  gap: 14px;
+  text-align: center;
+  padding: 10px 0 6px;
+}
+
+.banner-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.banner-title {
+  font-size: 18px;
+  color: var(--fg);
+}
+
+.table {
+  display: grid;
+  gap: 10px;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-align: center;
+}
+
+.table-row--head {
+  border-color: transparent;
+  padding-bottom: 0;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.table-row:not(.table-row--head) {
+  background: var(--panel-2);
+}
+
+.table-row:not(.table-row--head) > div:first-child {
+  color: var(--accent);
+}
