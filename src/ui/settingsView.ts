@@ -1,5 +1,6 @@
 import SETTINGS from '../settings';
 import type { GameConfig } from '../types';
+import { countPossibleSecrets } from '../game/countPossibleSecrets';
 import { focusAfterRender } from './focusAfterRender';
 
 export function settingsView(
@@ -19,6 +20,9 @@ export function settingsView(
   const lengthSelect = document.createElement('select');
   lengthSelect.className = 'length-select';
 
+  const hint = document.createElement('p');
+  hint.className = 'settings-hint';
+
   const baseOptions = SETTINGS.base.map((base) => {
     const option = document.createElement('option');
     option.value = String(base.value);
@@ -28,15 +32,24 @@ export function settingsView(
 
   baseSelect.append(...baseOptions);
 
-  const updateLengthOptions = () => {
-    const max = Math.min(Number(baseSelect.value), SETTINGS.maxLength);
-    lengthSelect.replaceChildren(...createLengthOptions(SETTINGS.minLength, max));
+  const updateHint = () => {
+    const combinations = countPossibleSecrets(Number(lengthSelect.value), Number(baseSelect.value));
+    hint.textContent = `Возможных вариантов: ${combinations.toLocaleString('ru-RU')}`;
   };
 
-  baseSelect.addEventListener('change', updateLengthOptions);
+  const updateLengthOptions = (preferredLength: number) => {
+    const max = Math.min(Number(baseSelect.value), SETTINGS.maxLength);
+    const selected = Math.min(Math.max(preferredLength, SETTINGS.minLength), max);
+    lengthSelect.replaceChildren(...createLengthOptions(SETTINGS.minLength, max));
+    lengthSelect.value = String(selected);
+    updateHint();
+  };
+
+  baseSelect.addEventListener('change', () => updateLengthOptions(Number(lengthSelect.value)));
+  lengthSelect.addEventListener('change', updateHint);
+
   baseSelect.value = String(base);
-  updateLengthOptions();
-  lengthSelect.value = String(length);
+  updateLengthOptions(length);
 
   const startButton = document.createElement('button');
   startButton.className = 'button';
@@ -47,7 +60,7 @@ export function settingsView(
     onStart({ length: Number(lengthSelect.value), base: Number(baseSelect.value) });
   });
 
-  container.append(title, baseSelect, lengthSelect, startButton);
+  container.append(title, baseSelect, lengthSelect, hint, startButton);
 
   return container;
 }
