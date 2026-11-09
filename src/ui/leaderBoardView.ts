@@ -1,3 +1,4 @@
+import SETTINGS from '../settings';
 import type { GameRecord } from '../types';
 import { formatDuration } from '../utils/formatDuration';
 
@@ -34,16 +35,18 @@ export function leaderBoardView(records: GameRecord[], onNewGame: () => void): H
     return row;
   };
 
-  const tableHead = createTableRow('Length / Base', 'Attempts', 'Time');
+  const tableHead = createTableRow('Length / System', 'Attempts', 'Time');
   tableHead.classList.add('table-row--head');
 
-  const rows = records.map((rec) =>
-    createTableRow(
-      `${rec.config.length}/${rec.config.base}`,
+  const rows = records.map((rec) => {
+    const baseLabel =
+      SETTINGS.base.find((b) => b.value === rec.config.base)?.label ?? rec.config.base;
+    return createTableRow(
+      `${rec.config.length} · ${baseLabel}`,
       `${rec.attempts}`,
       formatDuration(rec.time),
-    ),
-  );
+    );
+  });
 
   table.append(tableHead, ...rows);
 
