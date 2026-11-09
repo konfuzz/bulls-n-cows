@@ -1,5 +1,6 @@
 import { loadRecords, saveRecords, STORAGE_KEY } from './recordsStorage';
 import { afterEach, it, expect, vi, describe } from 'vitest';
+import type { RecordsMap } from '../types';
 
 function fakeStorage() {
   const map = new Map<string, string>();
@@ -14,14 +15,27 @@ afterEach(() => vi.unstubAllGlobals());
 describe('loadRecords and saveRecords', () => {
   it('сохраняет и читает обратно', () => {
     vi.stubGlobal('localStorage', fakeStorage());
-    saveRecords([{ config: { length: 4, base: 10 }, attempts: 10, time: 100 }]);
-    expect(loadRecords()).toEqual([{ config: { length: 4, base: 10 }, attempts: 10, time: 100 }]);
+    const records: RecordsMap = {
+      '4-10': [{ config: { length: 4, base: 10 }, attempts: 10, time: 100 }],
+    };
+    saveRecords(records);
+    expect(loadRecords()).toEqual(records);
   });
 
-  it('возвращает [] на мусор в хранилище', () => {
+  it('возвращает {} на мусор в хранилище', () => {
     const s = fakeStorage();
     s.setItem(STORAGE_KEY, 'это не json');
     vi.stubGlobal('localStorage', s);
-    expect(loadRecords()).toEqual([]);
+    expect(loadRecords()).toEqual({});
+  });
+
+  it('игнорирует старый формат (плоский массив)', () => {
+    const s = fakeStorage();
+    s.setItem(
+      STORAGE_KEY,
+      JSON.stringify([{ config: { length: 4, base: 10 }, attempts: 1, time: 1 }]),
+    );
+    vi.stubGlobal('localStorage', s);
+    expect(loadRecords()).toEqual({});
   });
 });

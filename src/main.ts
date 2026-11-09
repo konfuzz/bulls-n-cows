@@ -6,6 +6,7 @@ import { leaderBoardView } from './ui/leaderBoardView';
 import { generateSecret } from './game/generateSecret';
 import { loadRecords, saveRecords } from './storage/recordsStorage';
 import { addRecord } from './game/addRecord';
+import { configKey } from './utils/configKey';
 import type { GameConfig, GameRecord } from './types';
 
 const root = document.createElement('div');
@@ -17,16 +18,23 @@ title.textContent = '🐂 Bulls and Cows 🐄';
 let currentConfig: GameConfig = SETTINGS.defaultConfig;
 
 const showSettings = () => {
-  root.replaceChildren(title, settingsView(currentConfig, startGame));
+  root.replaceChildren(
+    title,
+    settingsView(currentConfig, { onStart: startGame, onLeaderboard: showLeaderBoard }),
+  );
 };
 
 const updateRecords = (record: GameRecord) => {
-  const records = addRecord(loadRecords(), record, SETTINGS.recordsLimit);
-  saveRecords(records);
+  const records = loadRecords();
+  const key = configKey(record.config);
+  saveRecords({
+    ...records,
+    [key]: addRecord(records[key] ?? [], record, SETTINGS.recordsLimit),
+  });
 };
 
 const showLeaderBoard = () => {
-  root.replaceChildren(title, leaderBoardView(loadRecords(), showSettings));
+  root.replaceChildren(title, leaderBoardView(loadRecords(), currentConfig, showSettings));
 };
 
 const startGame = (config: GameConfig) => {

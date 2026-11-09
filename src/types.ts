@@ -10,3 +10,5 @@ export interface GameRecord {
 }
 
 export type Attempt = { guess: string; bulls: number; cows: number };
+
+export type RecordsMap = Record<string, GameRecord[]>;

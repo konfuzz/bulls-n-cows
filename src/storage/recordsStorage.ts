@@ -1,19 +1,22 @@
-import type { GameRecord } from '../types';
+import type { RecordsMap } from '../types';
 
 export const STORAGE_KEY = 'bulls-n-cows-records';
 
-export function loadRecords(): GameRecord[] {
+export function loadRecords(): RecordsMap {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return [];
+    if (!raw) return {};
 
-    const records = JSON.parse(raw);
-    return Array.isArray(records) ? (records as GameRecord[]) : [];
+    const parsed: unknown = JSON.parse(raw);
+    if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+      return parsed as RecordsMap;
+    }
+    return {};
   } catch {
-    return [];
+    return {};
   }
 }
 
-export function saveRecords(records: GameRecord[]): void {
+export function saveRecords(records: RecordsMap): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
 }

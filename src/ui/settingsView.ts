@@ -3,9 +3,14 @@ import type { GameConfig } from '../types';
 import { countPossibleSecrets } from '../game/countPossibleSecrets';
 import { focusAfterRender } from './focusAfterRender';
 
+interface SettingsHandlers {
+  onStart: (config: GameConfig) => void;
+  onLeaderboard: () => void;
+}
+
 export function settingsView(
   { length, base }: GameConfig,
-  onStart: (config: GameConfig) => void,
+  { onStart, onLeaderboard }: SettingsHandlers,
 ): HTMLElement {
   const container = document.createElement('div');
   container.className = 'settings';
@@ -60,7 +65,16 @@ export function settingsView(
     onStart({ length: Number(lengthSelect.value), base: Number(baseSelect.value) });
   });
 
-  container.append(title, baseSelect, lengthSelect, hint, startButton);
+  const leaderBoardButton = document.createElement('button');
+  leaderBoardButton.className = 'button';
+  leaderBoardButton.textContent = 'Leaderboard';
+  leaderBoardButton.addEventListener('click', onLeaderboard);
+
+  const actions = document.createElement('div');
+  actions.className = 'settings-actions';
+  actions.append(startButton, leaderBoardButton);
+
+  container.append(title, baseSelect, lengthSelect, hint, actions);
 
   return container;
 }
