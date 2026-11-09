@@ -12,7 +12,7 @@ const root = document.createElement('div');
 root.className = 'root';
 
 const title = document.createElement('h1');
-title.textContent = 'Bulls and Cows';
+title.textContent = '🐂 Bulls and Cows 🐄';
 
 let currentConfig: GameConfig = SETTINGS.defaultConfig;
 

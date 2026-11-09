@@ -5,6 +5,7 @@ import { createDigitValidator } from '../game/createDigitValidator';
 import { evaluateGuess } from '../game/evaluateGuess';
 import { addAttempt, hasAttempt } from '../game/attempts';
 import { formatDuration } from '../utils/formatDuration';
+import { focusAfterRender } from './focusAfterRender';
 
 interface GameViewHandlers {
   onRestart: () => void;
@@ -22,21 +23,27 @@ export function gameView(
 
   const isValidChar = createDigitValidator(base);
   const container = document.createElement('div');
+  container.className = 'game';
 
   const newGameButton = document.createElement('button');
+  newGameButton.className = 'button';
   newGameButton.textContent = 'New Game';
   newGameButton.addEventListener('click', onRestart);
 
   const title = document.createElement('h2');
   const baseLabel = SETTINGS.base.find((b) => b.value === base)?.label ?? base;
+  title.className = 'screen-title';
   title.textContent = `Game: length ${length}, base ${baseLabel}`;
 
   const formWrapper = document.createElement('div');
   const form = document.createElement('form');
+  form.className = 'guess-form';
 
   const input = document.createElement('input');
+  input.className = 'guess-input';
   input.placeholder = 'Guess';
   input.maxLength = length;
+  focusAfterRender(input);
 
   input.addEventListener('beforeinput', (e) => {
     if (!e.data) return;
@@ -48,20 +55,28 @@ export function gameView(
   });
 
   const button = document.createElement('button');
+  button.className = 'button';
   button.type = 'submit';
   button.textContent = 'Guess';
 
   const historyElement = document.createElement('div');
+  historyElement.className = 'history';
+
   const error = document.createElement('p');
+  error.className = 'error';
+  error.setAttribute('aria-live', 'polite');
 
   const renderHistoryRow = ({ guess, bulls, cows }: Attempt) => {
     const historyRow = document.createElement('div');
+    historyRow.className = 'history-row';
 
     const newHistoryGuess = document.createElement('p');
+    newHistoryGuess.className = 'history-guess';
     newHistoryGuess.textContent = guess;
 
     const newHistoryResult = document.createElement('p');
-    newHistoryResult.textContent = `bulls: ${bulls}, cows: ${cows}`;
+    newHistoryResult.className = 'history-result';
+    newHistoryResult.textContent = `🐂 ${bulls} · 🐄 ${cows}`;
 
     historyRow.append(newHistoryGuess, newHistoryResult);
     return historyRow;
@@ -69,16 +84,24 @@ export function gameView(
 
   const finishGame = () => {
     const banner = document.createElement('div');
+    banner.className = 'banner';
+
     const timeSeconds = (Date.now() - startedAt) / 1000;
 
     const winTitle = document.createElement('h3');
+    winTitle.className = 'banner-title';
     winTitle.textContent = `You won in ${history.length} tries, ${formatDuration(timeSeconds)}!`;
 
     const leaderBoardButton = document.createElement('button');
+    leaderBoardButton.className = 'button';
     leaderBoardButton.textContent = 'Leaderboard';
     leaderBoardButton.addEventListener('click', onLeaderboard);
 
-    banner.append(winTitle, newGameButton, leaderBoardButton);
+    const actions = document.createElement('div');
+    actions.className = 'banner-actions';
+    actions.append(newGameButton, leaderBoardButton);
+
+    banner.append(winTitle, actions);
     formWrapper.replaceChildren(banner);
     onWin({ config: { length, base }, attempts: history.length, time: timeSeconds });
   };

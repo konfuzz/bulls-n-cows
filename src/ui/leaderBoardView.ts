@@ -3,18 +3,23 @@ import { formatDuration } from '../utils/formatDuration';
 
 export function leaderBoardView(records: GameRecord[], onNewGame: () => void): HTMLElement {
   const container = document.createElement('div');
+  container.className = 'leaderboard';
 
   const title = document.createElement('h2');
+  title.className = 'screen-title';
   title.textContent = 'Leaderboard';
 
   const newGameButton = document.createElement('button');
+  newGameButton.className = 'button';
   newGameButton.textContent = 'New Game';
   newGameButton.addEventListener('click', onNewGame);
 
   const table = document.createElement('div');
+  table.className = 'table';
 
   const createTableRow = (configText: string, attemptsText: string, timeText: string) => {
     const row = document.createElement('div');
+    row.className = 'table-row';
 
     const config = document.createElement('div');
     config.textContent = configText;
@@ -30,10 +35,12 @@ export function leaderBoardView(records: GameRecord[], onNewGame: () => void): H
   };
 
   const tableHead = createTableRow('Length / Base', 'Attempts', 'Time');
+  tableHead.classList.add('table-row--head');
+
   const rows = records.map((rec) =>
     createTableRow(
       `${rec.config.length}/${rec.config.base}`,
-      `${rec.attempts} attempts`,
+      `${rec.attempts}`,
       formatDuration(rec.time),
     ),
   );

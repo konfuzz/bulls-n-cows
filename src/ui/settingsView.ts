@@ -1,5 +1,6 @@
 import SETTINGS from '../settings';
 import type { GameConfig } from '../types';
+import { focusAfterRender } from './focusAfterRender';
 
 export function settingsView(
   { length, base }: GameConfig,
@@ -9,6 +10,7 @@ export function settingsView(
   container.className = 'settings';
 
   const title = document.createElement('h2');
+  title.className = 'screen-title';
   title.textContent = 'Settings';
 
   const baseSelect = document.createElement('select');
@@ -37,7 +39,9 @@ export function settingsView(
   lengthSelect.value = String(length);
 
   const startButton = document.createElement('button');
+  startButton.className = 'button';
   startButton.textContent = 'Start Game';
+  focusAfterRender(startButton);
 
   startButton.addEventListener('click', () => {
     onStart({ length: Number(lengthSelect.value), base: Number(baseSelect.value) });
